@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOPS Parfume | Premium Lifestyle Fragrance</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration (Design Tokens) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ecc137',
+                        black: '#090909',
+                        white: '#ffffff',
+                        text: '#151515',
+                        muted: '#666666',
+                        line: '#e9e9e9',
+                        soft: '#fafafa',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Utilities */
+        body { font-family: 'Inter', sans-serif; color: #151515; background-color: #ffffff; }
+        .page-view { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .page-view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* CSS Mockup Shapes */
+        .mockup-container { display: flex; align-items: center; justify-content: center; background-color: #fafafa; position: relative; overflow: hidden; }
+        .mockup-bottle { width: 80px; height: 120px; background-color: #090909; border-radius: 12px; position: relative; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #222; }
+        .mockup-bottle::before { content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 30px; height: 20px; background-color: #ecc137; border-radius: 4px 4px 0 0; }
+        .mockup-diffuser { width: 90px; height: 100px; background-color: #090909; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid #222;}
+        .mockup-diffuser::before { content: ''; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 4px; height: 60px; background-color: #ecc137; box-shadow: -15px 10px 0 #ecc137, 15px 5px 0 #ecc137; }
+        .mockup-spray { width: 60px; height: 140px; background-color: #090909; border-radius: 30px; position: relative; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 20px; border: 1px solid #222;}
+        .mockup-spray::before { content: ''; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 20px; height: 25px; background-color: #ecc137; border-radius: 10px 10px 0 0; }
+        .mockup-label { color: #ecc137; font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* Toast Notification */
+        #toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+        .toast { background-color: #090909; color: #ffffff; padding: 12px 24px; border-radius: 9999px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- Sticky Navbar -->
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-line transition-all">
+        <div class="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#home" class="text-2xl font-extrabold tracking-tighter text-black flex items-center gap-1">
+                DOPS<span class="text-primary">.</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-8 font-medium text-text">
+                <a href="#home" class="hover:text-primary transition-colors">Home</a>
+                <a href="#catalog" class="hover:text-primary transition-colors">Catalog</a>
+                <a href="#blog" class="hover:text-primary transition-colors">Journal</a>
+            </div>
+
+            <!-- Icons Menu -->
+            <div class="flex items-center gap-5">
+                <a href="#signin" id="nav-user-btn" class="text-text hover:text-primary transition-colors">
+                    <i class="ph ph-user text-2xl"></i>
+                </a>
+                <a href="#cart" class="text-text hover:text-primary transition-colors relative">
+                    <i class="ph ph-shopping-cart text-2xl"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-2 bg-primary text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full hidden">0</span>
+                </a>
+                <button class="md:hidden text-text text-2xl"><i class="ph ph-list"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area (SPA Router Target) -->
+    <main id="app" class="flex-grow pt-20">
+        
+        <!-- 1. HOME VIEW -->
+        <section id="home" class="page-view active">
+            <!-- Hero Section -->
+            <div class="bg-soft py-20 px-4 md:py-32">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-black leading-tight mb-6 tracking-tight">Fragrance for car, home, body, and your lifestyle.</h1>
+                    <p class="text-lg md:text-xl text-muted mb-10 max-w-2xl mx-auto leading-relaxed">DOPS bukan cuma parfum mobil. Ini ekosistem aroma untuk orang yang peduli detail: mobil wangi, ruangan clean, badan fresh, dan visual yang tetap premium.</p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="#catalog" class="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors w-full sm:w-auto">Shop Collection</a>
+                        <a href="#blog" class="bg-white border border-line text-black px-8 py-4 rounded-full font-semibold hover:border-black transition-colors w-full sm:w-auto">Read Journal</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Sellers -->
+            <div class="max-w-6xl mx-auto px-4 py-20">
+                <div class="flex justify-between items-end mb-10">
+                    <h2 class="text-3xl font-bold text-black">Best Sellers</h2>
+                    <a href="#catalog" class="text-primary font-medium hover:underline">View All</a>
+                </div>
+                <div id="home-bestsellers" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Kadipaten Series Banner -->
+            <div class="bg-black text-white py-20 px-4">
+                <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+                    <div class="flex-1 space-y-6">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Exclusive Collection</span>
+                        <h2 class="text-4xl md:text-5xl font-bold leading-tight">Kadipaten Series.</h2>
+                        <p class="text-gray-400 text-lg max-w-md">Aroma teh keraton yang kalem, bersih, dan classy. Hadir dalam varian Car Diffuser, Room Diffuser, dan Linen Spray.</p>
+                        <a href="#catalog?filter=Kadipaten Series" class="inline-block bg-primary text-black px-8 py-4 rounded-full font-semibold hover:bg-white transition-colors mt-4">Discover Kadipaten</a>
+                    </div>
+                    <div class="flex-1 w-full aspect-square md:aspect-auto md:h-96 bg-[#111] rounded-3xl border border-gray-800 flex items-center justify-center overflow-hidden p-8">
+                        <img src="assets/cardiff_kadipaten.png" alt="DOPS Car Diffuser Kadipaten" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                        <div class="hidden mockup-container bg-[#111] w-full h-full">
+                            <div class="mockup-diffuser">
+                                <span class="mockup-label">DOPS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Categories -->
+            <div class="max-w-6xl mx-auto px-4 py-20 text-center">
+                <h2 class="text-3xl font-bold text-black mb-12">Explore by Category</h2>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#catalog?cat=Car Perfume" class="px-6 py-3 border border-line rounded-full font-medium hover:border-primary hover:text-primary transition-colors">Car Perfume</a>
+                    <a href="#catalog?cat=Home Fragrance" class="px-6 py-3 border border-line rounded-full font-medium hover:border-primary hover:text-primary transition-colors">Home Fragrance</a>
+                    <a href="#catalog?cat=AutoCare" class="px-6 py-3 border border-line rounded-full font-medium hover:border-primary hover:text-primary transition-colors">AutoCare</a>
+                    <a href="#catalog?cat=BodyCare" class="px-6 py-3 border border-line rounded-full font-medium hover:border-primary hover:text-primary transition-colors">BodyCare</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. CATALOG VIEW -->
+        <section id="catalog" class="page-view max-w-6xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-extrabold text-black mb-8">DOPS Collection</h1>
+            
+            <!-- Search & Filter Bar -->
+            <div class="flex flex-col md:flex-row gap-4 mb-10">
+                <div class="relative flex-1">
+                    <i class="ph ph-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-muted text-xl"></i>
+                    <input type="text" id="catalog-search" placeholder="Search products..." class="w-full bg-soft border border-line rounded-full py-3 pl-12 pr-4 focus:outline-none focus:border-black transition-colors">
+                </div>
+                <select id="catalog-category" class="bg-soft border border-line rounded-full py-3 px-6 focus:outline-none focus:border-black appearance-none cursor-pointer min-w-[200px]">
+                    <option value="All">All Categories</option>
+                    <option value="Car Perfume">Car Perfume</option>
+                    <option value="Car Diffuser">Car Diffuser</option>
+                    <option value="Home Fragrance">Home Fragrance</option>
+                    <option value="AutoCare">AutoCare</option>
+                    <option value="BodyCare">BodyCare</option>
+                </select>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Injected via JS -->
+            </div>
+            
+            <div id="catalog-empty" class="hidden text-center py-20 text-muted">
+                <i class="ph ph-magnifying-glass text-4xl mb-2"></i>
+                <p>No products found.</p>
+            </div>
+        </section>
+
+        <!-- 3. PRODUCT DETAIL VIEW -->
+        <section id="product" class="page-view max-w-6xl mx-auto px-4 py-12">
+            <a href="#catalog" class="inline-flex items-center gap-2 text-muted hover:text-black mb-8 transition-colors">
+                <i class="ph ph-arrow-left"></i> Back to Catalog
+            </a>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12" id="product-detail-container">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- 4. CART VIEW -->
+        <section id="cart" class="page-view max-w-6xl mx-auto px-4 py-12">
+            <h1 class="text-3xl font-bold text-black mb-10">Shopping Cart</h1>
+            
+            <div class="flex flex-col lg:flex-row gap-12">
+                <!-- Cart Items -->
+                <div class="flex-1" id="cart-items-container">
+                    <!-- Injected via JS -->
+                </div>
+                
+                <!-- Order Summary (Sidebar) -->
+                <div class="w-full lg:w-96">
+                    <div class="bg-soft p-6 rounded-2xl border border-line sticky top-28">
+                        <h2 class="text-xl font-bold mb-6">Order Summary</h2>
+                        <div class="flex justify-between mb-4 text-muted">
+                            <span>Subtotal</span>
+                            <span id="cart-subtotal-display" class="font-medium text-black">Rp0</span>
+                        </div>
+                        <p class="text-sm text-muted mb-8">Shipping & taxes calculated at checkout.</p>
+                        <a href="#checkout" id="btn-checkout" class="block w-full bg-black text-white text-center py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors">Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. CHECKOUT VIEW -->
+        <section id="checkout" class="page-view max-w-4xl mx-auto px-4 py-12">
+            <h1 class="text-3xl font-bold text-black mb-2 text-center">Checkout</h1>
+            <div class="flex items-center justify-center gap-4 text-sm font-medium mb-10 text-muted">
+                <span class="text-black">1. Details</span>
+                <i class="ph ph-caret-right"></i>
+                <span>2. Shipping</span>
+                <i class="ph ph-caret-right"></i>
+                <span>3. Payment</span>
+            </div>
+
+            <form id="checkout-form" class="bg-white p-8 rounded-2xl border border-line shadow-sm">
+                <h2 class="text-xl font-bold mb-6">Customer Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-text mb-2">Full Name</label>
+                        <input type="text" id="chk-name" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text mb-2">Email</label>
+                        <input type="email" id="chk-email" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text mb-2">Phone Number</label>
+                        <input type="tel" id="chk-phone" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                    </div>
+                </div>
+                
+                <h2 class="text-xl font-bold mb-6 pt-6 border-t border-line">Shipping Address</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-text mb-2">Full Address</label>
+                        <textarea id="chk-address" required rows="3" class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text mb-2">City</label>
+                        <input type="text" id="chk-city" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text mb-2">Province</label>
+                        <input type="text" id="chk-province" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text mb-2">Postal Code</label>
+                        <input type="text" id="chk-postal" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <a href="#cart" class="text-muted hover:text-black font-medium"><i class="ph ph-arrow-left"></i> Return to Cart</a>
+                    <button type="submit" class="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors">Continue to Shipping</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 6. SHIPPING VIEW -->
+        <section id="shipping" class="page-view max-w-4xl mx-auto px-4 py-12">
+            <h1 class="text-3xl font-bold text-black mb-2 text-center">Checkout</h1>
+            <div class="flex items-center justify-center gap-4 text-sm font-medium mb-10 text-muted">
+                <a href="#checkout" class="text-black hover:underline">1. Details</a>
+                <i class="ph ph-caret-right"></i>
+                <span class="text-black">2. Shipping</span>
+                <i class="ph ph-caret-right"></i>
+                <span>3. Payment</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Customer Summary -->
+                    <div class="bg-white p-6 rounded-2xl border border-line">
+                        <div class="flex justify-between items-start pb-4 border-b border-line mb-4">
+                            <div><span class="text-muted block text-sm mb-1">Contact</span><span id="ship-contact-display" class="font-medium"></span></div>
+                            <a href="#checkout" class="text-sm text-primary font-medium">Change</a>
+                        </div>
+                        <div class="flex justify-between items-start">
+                            <div><span class="text-muted block text-sm mb-1">Ship to</span><span id="ship-address-display" class="font-medium text-sm leading-relaxed"></span></div>
+                            <a href="#checkout" class="text-sm text-primary font-medium">Change</a>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Method -->
+                    <form id="shipping-form" class="bg-white p-6 rounded-2xl border border-line">
+                        <h2 class="text-xl font-bold mb-4">Shipping Method</h2>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between p-4 border border-line rounded-xl cursor-pointer hover:border-black transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="shipping-method" value="15000" class="w-4 h-4 text-primary focus:ring-primary accent-primary" required>
+                                    <span class="font-medium">Regular Shipping (2-3 days)</span>
+                                </div>
+                                <span class="font-bold">Rp 15.000</span>
+                            </label>
+                            <label class="flex items-center justify-between p-4 border border-line rounded-xl cursor-pointer hover:border-black transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="shipping-method" value="25000" class="w-4 h-4 text-primary focus:ring-primary accent-primary">
+                                    <span class="font-medium">Express Shipping (1 day)</span>
+                                </div>
+                                <span class="font-bold">Rp 25.000</span>
+                            </label>
+                            <label class="flex items-center justify-between p-4 border border-line rounded-xl cursor-pointer hover:border-black transition-colors">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="shipping-method" value="35000" class="w-4 h-4 text-primary focus:ring-primary accent-primary">
+                                    <span class="font-medium">Instant Shipping (Same day)</span>
+                                </div>
+                                <span class="font-bold">Rp 35.000</span>
+                            </label>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mt-8 pt-6 border-t border-line">
+                            <a href="#checkout" class="text-muted hover:text-black font-medium"><i class="ph ph-arrow-left"></i> Return</a>
+                            <button type="submit" class="bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors">Continue to Payment</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Small Order Summary -->
+                <div class="bg-soft p-6 rounded-2xl border border-line h-fit">
+                    <h2 class="text-lg font-bold mb-4">Cart Summary</h2>
+                    <div id="ship-cart-summary" class="space-y-3 mb-6 pb-6 border-b border-line text-sm"></div>
+                    <div class="flex justify-between font-bold text-lg">
+                        <span>Subtotal</span>
+                        <span id="ship-subtotal-display">Rp0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. PAYMENT VIEW -->
+        <section id="payment" class="page-view max-w-4xl mx-auto px-4 py-12">
+            <h1 class="text-3xl font-bold text-black mb-2 text-center">Checkout</h1>
+            <div class="flex items-center justify-center gap-4 text-sm font-medium mb-10 text-muted">
+                <a href="#checkout" class="text-black hover:underline">1. Details</a>
+                <i class="ph ph-caret-right"></i>
+                <a href="#shipping" class="text-black hover:underline">2. Shipping</a>
+                <i class="ph ph-caret-right"></i>
+                <span class="text-black">3. Payment</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <form id="payment-form" class="bg-white p-6 rounded-2xl border border-line">
+                        <h2 class="text-xl font-bold mb-4">Payment Method</h2>
+                        <p class="text-sm text-muted mb-6">All transactions are secure and encrypted.</p>
+                        
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 p-4 border border-line rounded-xl cursor-pointer hover:border-black transition-colors">
+                                <input type="radio" name="payment-method" value="QRIS" class="w-4 h-4 text-primary focus:ring-primary accent-primary" required>
+                                <span class="font-medium">QRIS (GoPay, OVO, Dana, ShopeePay)</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-4 border border-line rounded-xl cursor-pointer hover:border-black transition-colors">
+                                <input type="radio" name="payment-method" value="Bank Transfer" class="w-4 h-4 text-primary focus:ring-primary accent-primary">
+                                <span class="font-medium">Bank Transfer (BCA, Mandiri, BNI)</span>
+                            </label>
+                            <label class="flex items-center gap-3 p-4 border border-line rounded-xl cursor-pointer hover:border-black transition-colors">
+                                <input type="radio" name="payment-method" value="COD" class="w-4 h-4 text-primary focus:ring-primary accent-primary">
+                                <span class="font-medium">Cash on Delivery (COD Prototype)</span>
+                            </label>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <button type="submit" class="w-full bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors flex items-center justify-center gap-2">
+                                <i class="ph ph-lockKey"></i> Place Order Securely
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Final Order Summary -->
+                <div class="bg-soft p-6 rounded-2xl border border-line h-fit">
+                    <h2 class="text-lg font-bold mb-6">Order Total</h2>
+                    <div class="space-y-3 text-sm mb-4">
+                        <div class="flex justify-between text-muted">
+                            <span>Subtotal</span>
+                            <span id="pay-subtotal">Rp0</span>
+                        </div>
+                        <div class="flex justify-between text-muted">
+                            <span>Shipping</span>
+                            <span id="pay-shipping-cost">Rp0</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between font-bold text-xl pt-4 border-t border-line">
+                        <span>Total</span>
+                        <span id="pay-total" class="text-primary">Rp0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUCCESS VIEW (Appears after payment) -->
+        <section id="success" class="page-view max-w-2xl mx-auto px-4 py-20 text-center">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
+                <i class="ph ph-check-circle"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-black mb-4">Order Placed Successfully!</h1>
+            <p class="text-muted mb-2">Thank you for your purchase.</p>
+            <p class="text-lg font-medium text-black mb-8">Your Invoice ID: <span id="invoice-id" class="text-primary font-bold"></span></p>
+            <a href="#home" class="inline-block bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors">Return to Home</a>
+        </section>
+
+        <!-- 8. SIGN IN VIEW -->
+        <section id="signin" class="page-view max-w-md mx-auto px-4 py-20">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-black">Welcome Back</h1>
+                <p class="text-muted mt-2">Sign in to your DOPS account.</p>
+            </div>
+            <form id="signin-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-text mb-2">Email</label>
+                    <input type="email" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text mb-2">Password</label>
+                    <input type="password" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                </div>
+                <button type="submit" class="w-full bg-black text-white py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors">Sign In</button>
+            </form>
+            <p class="text-center mt-6 text-sm text-muted">Don't have an account? <a href="#register" class="text-black font-semibold hover:underline">Register</a></p>
+        </section>
+
+        <!-- 9. REGISTER VIEW -->
+        <section id="register" class="page-view max-w-md mx-auto px-4 py-20">
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-black">Create Account</h1>
+                <p class="text-muted mt-2">Join the DOPS lifestyle.</p>
+            </div>
+            <form id="register-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-text mb-2">Full Name</label>
+                    <input type="text" id="reg-name" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text mb-2">Email</label>
+                    <input type="email" id="reg-email" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text mb-2">Phone</label>
+                    <input type="tel" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text mb-2">Password</label>
+                    <input type="password" required class="w-full bg-soft border border-line rounded-lg py-3 px-4 focus:outline-none focus:border-black">
+                </div>
+                <button type="submit" class="w-full bg-black text-white py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors">Register</button>
+            </form>
+            <p class="text-center mt-6 text-sm text-muted">Already have an account? <a href="#signin" class="text-black font-semibold hover:underline">Sign In</a></p>
+        </section>
+
+        <!-- 10. BLOG VIEW -->
+        <section id="blog" class="page-view max-w-6xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-extrabold text-black mb-4">DOPS Journal</h1>
+            <p class="text-muted mb-12 text-lg">Stories about lifestyle, fragrance, and taking care of your surroundings.</p>
+            
+            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- 11. ARTICLE VIEW -->
+        <section id="article" class="page-view max-w-[820px] mx-auto px-4 py-12">
+            <a href="#blog" class="inline-flex items-center gap-2 text-muted hover:text-black mb-8 transition-colors text-sm font-medium">
+                <i class="ph ph-arrow-left"></i> Back to Journal
+            </a>
+            <div id="article-content">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-white border-t-4 border-primary mt-20">
+        <div class="max-w-6xl mx-auto px-4 py-12 md:py-16 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="md:col-span-2">
+                <a href="#home" class="text-3xl font-extrabold tracking-tighter text-white mb-4 block">DOPS<span class="text-primary">.</span></a>
+                <p class="text-gray-400 max-w-sm mb-6">Fragrance lifestyle & entertainment dari Indonesia. Membawa pengalaman aroma premium untuk mobil, ruangan, dan tubuh Anda.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-black transition-colors"><i class="ph ph-instagram-logo text-xl"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary hover:text-black transition-colors"><i class="ph ph-tiktok-logo text-xl"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">Shop</h4>
+                <ul class="space-y-3 text-gray-400">
+                    <li><a href="#catalog?cat=Car Perfume" class="hover:text-primary transition-colors">Car Perfume</a></li>
+                    <li><a href="#catalog?cat=Home Fragrance" class="hover:text-primary transition-colors">Home Fragrance</a></li>
+                    <li><a href="#catalog?cat=AutoCare" class="hover:text-primary transition-colors">AutoCare</a></li>
+                    <li><a href="#catalog?cat=BodyCare" class="hover:text-primary transition-colors">BodyCare</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-4 text-lg">Information</h4>
+                <ul class="space-y-3 text-gray-400">
+                    <li><a href="#blog" class="hover:text-primary transition-colors">Journal</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Shipping Policy</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 py-6 text-center text-sm text-gray-500">
+            &copy; 2026 DOPS Parfume. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- JavaScript Logic (Vanilla SPA) -->
+    <script>
+        // --- DATA ---
+        const PRODUCTS = [
+            {
+                id: "dops-for-car",
+                name: "DOPS For Car",
+                category: "Car Perfume",
+                price: 39000,
+                variant: "Americano / Bubblegum / Vanilla Cake / Sweet Berry",
+                tag: "Best Seller",
+                description: "Parfum mobil gantung 10 ml dengan karakter wangi premium, clean, dan tidak bikin mual.",
+                notes: ["Fresh", "Sweet", "Premium Daily Scent"],
+                benefit: ["Cocok untuk mobil harian", "Desain simple premium", "Aroma tidak menusuk"],
+                mockup: "mockup-bottle"
+            },
+            {
+                id: "car-diffuser-kadipaten",
+                name: "DOPS Car Diffuser Kadipaten",
+                category: "Car Diffuser",
+                price: 69000,
+                variant: "Tea • Floral • Fresh",
+                tag: "Kadipaten Series",
+                description: "Car diffuser 15 ml untuk kisi AC mobil. Aroma teh keraton yang kalem, bersih, dan classy.",
+                notes: ["Tea", "Floral", "Clean"],
+                benefit: ["Dipakai di kisi AC", "Aroma menyebar saat AC menyala", "Vibe mobil lebih premium"],
+                image: "assets/cardiff_kadipaten.png",
+                mockup: "mockup-diffuser"
+            },
+            {
+                id: "room-diffuser-kadipaten",
+                name: "DOPS Room Diffuser Kadipaten",
+                category: "Home Fragrance",
+                price: 95000,
+                variant: "50 ml Reed Diffuser",
+                tag: "For Home",
+                description: "Room diffuser untuk kamar, kantor, dan ruang tamu. Nuansa teh hangat dengan kesan premium.",
+                notes: ["Tea", "Warm", "Elegant"],
+                benefit: ["Cocok untuk ruangan", "Dekoratif", "Aroma kalem dan mewah"],
+                mockup: "mockup-diffuser"
+            },
+            {
+                id: "linen-spray",
+                name: "DOPS Linen Spray",
+                category: "Home Fragrance",
+                price: 49000,
+                variant: "Kadipaten / Lavender / Roses",
+                tag: "Daily Use",
+                description: "Semprot linen, sofa, bantal, dan interior agar ruangan terasa segar dalam beberapa detik.",
+                notes: ["Fresh", "Soft", "Clean"],
+                benefit: ["Praktis dipakai harian", "Cocok untuk kain dan ruangan", "Aroma cepat terasa"],
+                mockup: "mockup-spray"
+            },
+            {
+                id: "autocare-bundle",
+                name: "DOPS AutoCare Bundle",
+                category: "AutoCare",
+                price: 99000,
+                variant: "Super Shine Shampoo + Ultra Black Tyre Gel",
+                tag: "Bundle",
+                description: "Paket cuci mobil: shampoo dan tyre gel untuk finishing mobil lebih clean, hitam, dan glossy.",
+                notes: ["Clean", "Glossy", "Auto Detailing"],
+                benefit: ["Mobil terlihat lebih niat", "Ban lebih hitam", "Cocok untuk bundling parfum mobil"],
+                mockup: "mockup-spray"
+            },
+            {
+                id: "dops-deodorant",
+                name: "DOPS Deodorant Spray",
+                category: "BodyCare",
+                price: 59000,
+                variant: "Quick Dry Formula",
+                tag: "BodyCare",
+                description: "Deodorant spray cepat kering untuk daily activity, cocok buat aktivitas indoor dan outdoor.",
+                notes: ["Fresh", "Dry", "Daily"],
+                benefit: ["Cepat kering", "Nyaman dipakai harian", "Aroma fresh"],
+                mockup: "mockup-spray"
+            }
+        ];
+
+        const ARTICLES = [
+            {
+                id: "mood-naik",
+                title: "Kenapa Mobil Wangi Bisa Bikin Mood Naik?",
+                date: "May 10, 2026",
+                excerpt: "Tahukah Anda bahwa aroma dalam kabin mobil memiliki dampak langsung pada psikologis pengemudi saat menghadapi kemacetan?",
+                content: "<p class='mb-4'>Aroma memiliki jalur langsung ke sistem limbik otak kita, bagian yang mengatur emosi dan ingatan. Itulah sebabnya, saat Anda masuk ke mobil yang wangi, mood Anda bisa langsung berubah positif.</p><p class='mb-4'>Di jalanan kota yang macet, stres sangat mudah memuncak. Parfum mobil dengan notes fresh atau calming (seperti teh atau vanilla lembut) berfungsi sebagai aromaterapi instan. Jangan pilih parfum yang terlalu menyengat, karena justru bisa memicu pusing atau mual. Pilihlah aroma 'clean' yang membuat kabin terasa seperti lounge eksklusif.</p><p class='mb-4'>DOPS For Car dirancang khusus untuk menciptakan ekosistem aroma yang premium namun tetap subtle untuk menemani daily activity Anda.</p>"
+            },
+            {
+                id: "kadipaten-teh",
+                title: "Kadipaten: Aroma Teh yang Bikin Ruangan Terasa Mahal",
+                date: "May 15, 2026",
+                excerpt: "Mengulik inspirasi di balik seri Kadipaten yang membawa nuansa keraton Jawa ke dalam ruang tamu modern Anda.",
+                content: "<p class='mb-4'>Teh bukan sekadar minuman; ia adalah simbol ketenangan dan keramahan. Seri Kadipaten dari DOPS terinspirasi dari ritual minum teh di sore hari di lingkungan keraton—kalem, hangat, dan berkelas.</p><p class='mb-4'>Dengan notes utama black tea, berpadu dengan sentuhan floral ringan dan musk, aroma ini tidak mendominasi ruangan secara agresif, melainkan menyatu dengan udara. Baik menggunakan Room Diffuser maupun Linen Spray, aroma Kadipaten seketika menaikkan 'kelas' dari sebuah ruangan.</p><p class='mb-4'>Tips: Semprotkan DOPS Linen Spray Kadipaten di sofa kain atau gorden Anda lima menit sebelum tamu datang untuk impresi pertama yang tak terlupakan.</p>"
+            },
+            {
+                id: "parfum-mobil-mual",
+                title: "Cara Memilih Parfum Mobil yang Tidak Bikin Mual",
+                date: "May 22, 2026",
+                excerpt: "Sering pusing karena parfum mobil? Anda tidak sendiri. Berikut panduan memilih aroma yang tepat untuk road trip panjang.",
+                content: "<p class='mb-4'>Keluhan paling umum tentang parfum mobil adalah aromanya yang bikin mual. Hal ini biasanya terjadi karena penggunaan bibit parfum sintetis berkualitas rendah atau konsentrasi yang terlalu tajam di ruangan sempit.</p><h3 class='text-xl font-bold mb-2 mt-6'>1. Hindari Aroma Terlalu Manis (Fruity/Candy)</h3><p class='mb-4'>Aroma buah-buahan sintetis yang berlebihan di ruang tertutup ber-AC sering kali bertabrakan dengan bau plastik/kulit interior mobil, memicu rasa pusing.</p><h3 class='text-xl font-bold mb-2 mt-6'>2. Pilih Karakter 'Clean' atau 'Fresh'</h3><p class='mb-4'>Aroma seperti kopi ringan (Americano), teh, atau ozonic/aquatic jauh lebih aman. DOPS Car Diffuser sangat ideal karena aromanya didistribusikan perlahan lewat kisi AC.</p>"
+            }
+        ];
+
+        // --- UTILITIES ---
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
+        };
+
+        const showToast = (message) => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="ph-fill ph-check-circle text-primary text-lg"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        const getMockupHTML = (type, label = 'DOPS') => {
+            return `
+                <div class="w-full aspect-square mockup-container rounded-t-2xl">
+                    <div class="${type}">
+                        <span class="mockup-label absolute bottom-4">${label}</span>
+                    </div>
+                </div>
+            `;
+        };
+
+        const getProductVisualHTML = (product) => {
+            if (product.image) {
+                return `
+                    <div class="w-full aspect-square bg-soft flex items-center justify-center overflow-hidden border-b border-line">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-contain p-6" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                        <div class="hidden w-full h-full mockup-container">
+                            <div class="${product.mockup}">
+                                <span class="mockup-label absolute bottom-4">DOPS</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            return getMockupHTML(product.mockup, 'DOPS');
+        };
+
+        const getProductDetailVisualHTML = (product) => {
+            if (product.image) {
+                return `
+                    <div class="bg-soft rounded-3xl p-8 flex items-center justify-center h-[400px] md:h-[600px] border border-line overflow-hidden">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-contain" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');">
+                        <div class="hidden w-full h-full items-center justify-center">
+                            <div class="${product.mockup} scale-150 transform">
+                                <span class="mockup-label absolute bottom-4">DOPS</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            return `
+                <div class="bg-soft rounded-3xl p-8 flex items-center justify-center h-[400px] md:h-[600px] border border-line">
+                    <div class="${product.mockup} scale-150 transform">
+                        <span class="mockup-label absolute bottom-4">DOPS</span>
+                    </div>
+                </div>
+            `;
+        };
+
+        const getCartVisualHTML = (item) => {
+            if (item.image) {
+                return `<img src="${item.image}" alt="${item.name}" class="w-full h-full object-contain p-2" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"><div class="hidden ${item.mockup} scale-50 origin-bottom pb-0 h-[80px]"></div>`;
+            }
+            return `<div class="${item.mockup} scale-50 origin-bottom pb-0 h-[80px]"></div>`;
+        };
+
+        // --- CART LOGIC ---
+        const getCart = () => JSON.parse(localStorage.getItem('dopsCart')) || [];
+        const saveCart = (cart) => {
+            localStorage.setItem('dopsCart', JSON.stringify(cart));
+            updateCartBadge();
+        };
+
+        const addToCart = (productId, qty = 1) => {
+            const cart = getCart();
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({ id: productId, qty });
+            }
+            saveCart(cart);
+            showToast('Ditambahkan ke keranjang');
+            if(window.location.hash.includes('#cart')) initCart();
+        };
+
+        const removeFromCart = (productId) => {
+            let cart = getCart();
+            cart = cart.filter(item => item.id !== productId);
+            saveCart(cart);
+            initCart();
+        };
+
+        const updateQty = (productId, delta) => {
+            const cart = getCart();
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) removeFromCart(productId);
+                else { saveCart(cart); initCart(); }
+            }
+        };
+
+        const cartDetails = () => {
+            const cart = getCart();
+            return cart.map(cartItem => {
+                const product = PRODUCTS.find(p => p.id === cartItem.id);
+                return { ...product, qty: cartItem.qty };
+            }).filter(item => item.id); // Filter out if product no longer exists
+        };
+
+        const cartSubtotal = () => {
+            return cartDetails().reduce((sum, item) => sum + (item.price * item.qty), 0);
+        };
+
+        const updateCartBadge = () => {
+            const cart = getCart();
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        };
+
+        // --- AUTH LOGIC (DUMMY) ---
+        const checkAuth = () => {
+            const user = localStorage.getItem('dopsUser');
+            const navBtn = document.getElementById('nav-user-btn');
+            if (user) {
+                navBtn.innerHTML = '<i class="ph-fill ph-user-circle text-primary text-2xl"></i>';
+                navBtn.href = "#home"; 
+                navBtn.onclick = () => { 
+                    if(confirm('Logout?')) { localStorage.removeItem('dopsUser'); checkAuth(); window.location.hash = '#home'; }
+                };
+            } else {
+                navBtn.innerHTML = '<i class="ph ph-user text-2xl"></i>';
+                navBtn.href = "#signin";
+                navBtn.onclick = null;
+            }
+        };
+
+        // --- VIEW RENDERERS ---
+
+        // Product Card Generator
+        const createProductCard = (product) => `
+            <div class="bg-white rounded-2xl border border-line overflow-hidden group hover:shadow-lg transition-all duration-300 flex flex-col h-full">
+                <a href="#product?id=${product.id}" class="block relative">
+                    <span class="absolute top-3 left-3 bg-white text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest z-10 shadow-sm">${product.tag}</span>
+                    ${getProductVisualHTML(product)}
+                </a>
+                <div class="p-5 flex flex-col flex-grow">
+                    <p class="text-xs text-muted mb-1">${product.category}</p>
+                    <a href="#product?id=${product.id}" class="font-bold text-black text-lg mb-2 hover:text-primary transition-colors line-clamp-2">${product.name}</a>
+                    <div class="mt-auto pt-4 flex items-center justify-between">
+                        <span class="font-extrabold text-lg">${formatRupiah(product.price)}</span>
+                        <button onclick="addToCart('${product.id}')" class="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-primary hover:text-black transition-colors" aria-label="Add to cart">
+                            <i class="ph ph-plus font-bold"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const initHome = () => {
+            const bestSellers = PRODUCTS.slice(0, 3);
+            document.getElementById('home-bestsellers').innerHTML = bestSellers.map(createProductCard).join('');
+        };
+
+        const initCatalog = (queryParams) => {
+            const grid = document.getElementById('catalog-grid');
+            const emptyState = document.getElementById('catalog-empty');
+            const searchInput = document.getElementById('catalog-search');
+            const categorySelect = document.getElementById('catalog-category');
+            
+            // Set initial filters from URL if present
+            if(queryParams) {
+                const urlCat = queryParams.get('cat');
+                const urlFilter = queryParams.get('filter'); // e.g. Kadipaten Series
+                if (urlCat) categorySelect.value = urlCat;
+                if (urlFilter) searchInput.value = urlFilter;
+            }
+
+            const renderGrid = () => {
+                const search = searchInput.value.toLowerCase();
+                const category = categorySelect.value;
+                
+                const filtered = PRODUCTS.filter(p => {
+                    const matchSearch = p.name.toLowerCase().includes(search) || p.tag.toLowerCase().includes(search);
+                    const matchCat = category === 'All' || p.category === category;
+                    return matchSearch && matchCat;
+                });
+
+                if (filtered.length > 0) {
+                    grid.innerHTML = filtered.map(createProductCard).join('');
+                    grid.classList.remove('hidden');
+                    emptyState.classList.add('hidden');
+                } else {
+                    grid.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                }
+            };
+
+            searchInput.addEventListener('input', renderGrid);
+            categorySelect.addEventListener('change', renderGrid);
+            
+            renderGrid();
+        };
+
+        const initProduct = (id) => {
+            const container = document.getElementById('product-detail-container');
+            const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[0]; // fallback
+            
+            if(!product) return;
+
+            window.scrollTo(0, 0);
+            
+            container.innerHTML = `
+                <!-- Left: Product Image -->
+                ${getProductDetailVisualHTML(product)}
+                
+                <!-- Right: Details -->
+                <div class="flex flex-col justify-center">
+                    <span class="inline-block bg-black text-primary text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest w-fit mb-4">${product.tag}</span>
+                    <h1 class="text-3xl md:text-5xl font-extrabold text-black mb-2">${product.name}</h1>
+                    <p class="text-muted font-medium mb-6">${product.category} &bull; ${product.variant}</p>
+                    <p class="text-3xl font-bold text-black mb-8">${formatRupiah(product.price)}</p>
+                    
+                    <p class="text-text leading-relaxed mb-8">${product.description}</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-soft p-4 rounded-xl border border-line">
+                            <h4 class="font-bold text-sm mb-2"><i class="ph ph-wind"></i> Notes</h4>
+                            <p class="text-sm text-muted">${product.notes.join(', ')}</p>
+                        </div>
+                        <div class="bg-soft p-4 rounded-xl border border-line">
+                            <h4 class="font-bold text-sm mb-2"><i class="ph ph-sparkle"></i> Benefits</h4>
+                            <ul class="text-sm text-muted list-disc list-inside">
+                                ${product.benefit.map(b => `<li>${b}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center border border-line rounded-full bg-soft">
+                            <button onclick="document.getElementById('p-qty').stepDown()" class="w-12 h-12 flex items-center justify-center hover:text-primary"><i class="ph ph-minus"></i></button>
+                            <input type="number" id="p-qty" min="1" value="1" class="w-12 text-center bg-transparent font-bold outline-none" readonly>
+                            <button onclick="document.getElementById('p-qty').stepUp()" class="w-12 h-12 flex items-center justify-center hover:text-primary"><i class="ph ph-plus"></i></button>
+                        </div>
+                        <button onclick="addToCart('${product.id}', parseInt(document.getElementById('p-qty').value))" class="flex-1 bg-black text-white h-12 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors flex items-center justify-center gap-2">
+                            <i class="ph ph-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+        };
+
+        const initCart = () => {
+            const container = document.getElementById('cart-items-container');
+            const items = cartDetails();
+            const subtotalDisplay = document.getElementById('cart-subtotal-display');
+            const btnCheckout = document.getElementById('btn-checkout');
+            
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-20 bg-soft rounded-2xl border border-line">
+                        <i class="ph ph-shopping-cart text-5xl text-muted mb-4"></i>
+                        <h2 class="text-2xl font-bold mb-2">Keranjang Kosong</h2>
+                        <p class="text-muted mb-6">Belum ada produk di keranjang Anda.</p>
+                        <a href="#catalog" class="inline-block bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-primary hover:text-black transition-colors">Belanja Sekarang</a>
+                    </div>
+                `;
+                subtotalDisplay.textContent = 'Rp0';
+                btnCheckout.classList.add('opacity-50', 'pointer-events-none');
+            } else {
+                container.innerHTML = `<div class="space-y-4">
+                    ${items.map(item => `
+                        <div class="flex items-center gap-4 p-4 border border-line rounded-2xl bg-white relative">
+                            <div class="w-24 h-24 bg-soft rounded-xl flex items-center justify-center flex-shrink-0">
+                               ${getCartVisualHTML(item)}
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-black line-clamp-1"><a href="#product?id=${item.id}">${item.name}</a></h3>
+                                <p class="text-sm text-muted mb-2">${formatRupiah(item.price)}</p>
+                                <div class="flex items-center border border-line rounded-full bg-soft w-fit">
+                                    <button onclick="updateQty('${item.id}', -1)" class="w-8 h-8 flex items-center justify-center hover:text-primary"><i class="ph ph-minus text-xs"></i></button>
+                                    <span class="w-8 text-center font-bold text-sm">${item.qty}</span>
+                                    <button onclick="updateQty('${item.id}', 1)" class="w-8 h-8 flex items-center justify-center hover:text-primary"><i class="ph ph-plus text-xs"></i></button>
+                                </div>
+                            </div>
+                            <div class="text-right flex flex-col items-end justify-between h-24 py-1">
+                                <button onclick="removeFromCart('${item.id}')" class="text-muted hover:text-red-500 transition-colors p-1"><i class="ph ph-trash text-lg"></i></button>
+                                <span class="font-bold">${formatRupiah(item.price * item.qty)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+                subtotalDisplay.textContent = formatRupiah(cartSubtotal());
+                btnCheckout.classList.remove('opacity-50', 'pointer-events-none');
+            }
+        };
+
+        const initCheckout = () => {
+            if(getCart().length === 0) { window.location.hash = '#cart'; return; }
+            const form = document.getElementById('checkout-form');
+            const cust = JSON.parse(localStorage.getItem('dopsCustomer')) || {};
+            
+            // Prefill if exists
+            if(cust.name) document.getElementById('chk-name').value = cust.name;
+            if(cust.email) document.getElementById('chk-email').value = cust.email;
+            if(cust.phone) document.getElementById('chk-phone').value = cust.phone;
+            if(cust.address) document.getElementById('chk-address').value = cust.address;
+            if(cust.city) document.getElementById('chk-city').value = cust.city;
+            if(cust.province) document.getElementById('chk-province').value = cust.province;
+            if(cust.postal) document.getElementById('chk-postal').value = cust.postal;
+
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                const customerData = {
+                    name: document.getElementById('chk-name').value,
+                    email: document.getElementById('chk-email').value,
+                    phone: document.getElementById('chk-phone').value,
+                    address: document.getElementById('chk-address').value,
+                    city: document.getElementById('chk-city').value,
+                    province: document.getElementById('chk-province').value,
+                    postal: document.getElementById('chk-postal').value,
+                };
+                localStorage.setItem('dopsCustomer', JSON.stringify(customerData));
+                window.location.hash = '#shipping';
+            };
+        };
+
+        const initShipping = () => {
+            if(getCart().length === 0) { window.location.hash = '#cart'; return; }
+            const cust = JSON.parse(localStorage.getItem('dopsCustomer'));
+            if(!cust) { window.location.hash = '#checkout'; return; }
+
+            document.getElementById('ship-contact-display').textContent = `${cust.email} • ${cust.phone}`;
+            document.getElementById('ship-address-display').innerHTML = `${cust.address},<br>${cust.city}, ${cust.province} ${cust.postal}`;
+
+            // Mini cart summary
+            const items = cartDetails();
+            const summaryDiv = document.getElementById('ship-cart-summary');
+            summaryDiv.innerHTML = items.map(item => `
+                <div class="flex justify-between">
+                    <span class="text-muted"><span class="font-bold text-black">${item.qty}x</span> ${item.name}</span>
+                    <span class="font-medium">${formatRupiah(item.price * item.qty)}</span>
+                </div>
+            `).join('');
+            document.getElementById('ship-subtotal-display').textContent = formatRupiah(cartSubtotal());
+
+            const form = document.getElementById('shipping-form');
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const cost = parseInt(formData.get('shipping-method'));
+                localStorage.setItem('dopsShipping', JSON.stringify({ cost }));
+                window.location.hash = '#payment';
+            };
+        };
+
+        const initPayment = () => {
+            if(getCart().length === 0) { window.location.hash = '#cart'; return; }
+            const cust = JSON.parse(localStorage.getItem('dopsCustomer'));
+            const ship = JSON.parse(localStorage.getItem('dopsShipping'));
+            if(!cust) { window.location.hash = '#checkout'; return; }
+            if(!ship) { window.location.hash = '#shipping'; return; }
+
+            const sub = cartSubtotal();
+            const shippingCost = ship.cost;
+            const total = sub + shippingCost;
+
+            document.getElementById('pay-subtotal').textContent = formatRupiah(sub);
+            document.getElementById('pay-shipping-cost').textContent = formatRupiah(shippingCost);
+            document.getElementById('pay-total').textContent = formatRupiah(total);
+
+            const form = document.getElementById('payment-form');
+            form.onsubmit = (e) => {
+                e.preventDefault();
+                // Place Order Logic
+                const invoice = `DOPS-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+                document.getElementById('invoice-id').textContent = invoice;
+                
+                // Clear Cart, Keep Customer data for convenience
+                localStorage.removeItem('dopsCart');
+                localStorage.removeItem('dopsShipping');
+                updateCartBadge();
+                
+                window.location.hash = '#success';
+            };
+        };
+
+        const initAuthPages = () => {
+            const signinForm = document.getElementById('signin-form');
+            const registerForm = document.getElementById('register-form');
+            
+            if(signinForm) {
+                signinForm.onsubmit = (e) => {
+                    e.preventDefault();
+                    localStorage.setItem('dopsUser', JSON.stringify({ dummy: true }));
+                    checkAuth();
+                    window.location.hash = '#home';
+                    showToast('Login berhasil');
+                };
+            }
+            if(registerForm) {
+                registerForm.onsubmit = (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('reg-name').value;
+                    localStorage.setItem('dopsUser', JSON.stringify({ name }));
+                    checkAuth();
+                    window.location.hash = '#home';
+                    showToast('Registrasi berhasil');
+                };
+            }
+        };
+
+        const initBlog = () => {
+            const grid = document.getElementById('blog-grid');
+            grid.innerHTML = ARTICLES.map(a => `
+                <a href="#article?id=${a.id}" class="group block bg-white rounded-2xl border border-line overflow-hidden hover:shadow-lg transition-all duration-300">
+                    <div class="aspect-[4/3] bg-black flex items-center justify-center p-6 text-center">
+                         <span class="text-primary font-extrabold text-2xl uppercase tracking-widest opacity-30 group-hover:opacity-100 transition-opacity">DOPS Journal</span>
+                    </div>
+                    <div class="p-6">
+                        <span class="text-xs text-muted mb-2 block font-medium">${a.date}</span>
+                        <h3 class="font-bold text-xl mb-3 group-hover:text-primary transition-colors line-clamp-2">${a.title}</h3>
+                        <p class="text-muted text-sm line-clamp-3">${a.excerpt}</p>
+                    </div>
+                </a>
+            `).join('');
+        };
+
+        const initArticle = (id) => {
+            const container = document.getElementById('article-content');
+            let article = ARTICLES.find(a => a.id === id);
+            if(!article) article = ARTICLES[0]; // fallback
+
+            container.innerHTML = `
+                <span class="text-primary font-bold text-sm tracking-widest uppercase mb-2 block">Journal</span>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-black mb-4 leading-tight">${article.title}</h1>
+                <p class="text-muted mb-8 pb-8 border-b border-line">${article.date} &bull; by DOPS Editorial</p>
+                
+                <div class="aspect-video bg-black rounded-3xl flex items-center justify-center mb-10">
+                     <span class="text-primary font-extrabold text-3xl uppercase tracking-widest opacity-50">DOPS Visual</span>
+                </div>
+                
+                <div class="prose max-w-none text-text text-lg leading-relaxed">
+                    ${article.content}
+                </div>
+                
+                <div class="mt-12 pt-8 border-t border-line text-center">
+                    <a href="#catalog" class="inline-block bg-black text-white px-8 py-4 rounded-full font-semibold hover:bg-primary hover:text-black transition-colors">Shop DOPS Collection</a>
+                </div>
+            `;
+            window.scrollTo(0, 0);
+        };
+
+        // --- ROUTER ---
+        const router = () => {
+            const hash = window.location.hash || '#home';
+            const [path, queryString] = hash.split('?');
+            const viewId = path.replace('#', '') || 'home';
+            const queryParams = new URLSearchParams(queryString || '');
+
+            // Hide all views
+            document.querySelectorAll('.page-view').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show target view
+            const targetView = document.getElementById(viewId);
+            if(targetView) {
+                targetView.classList.add('active');
+            } else {
+                document.getElementById('home').classList.add('active');
+            }
+
+            // Execute view-specific logic
+            switch(viewId) {
+                case 'home': initHome(); break;
+                case 'catalog': initCatalog(queryParams); break;
+                case 'product': initProduct(queryParams.get('id')); break;
+                case 'cart': initCart(); break;
+                case 'checkout': initCheckout(); break;
+                case 'shipping': initShipping(); break;
+                case 'payment': initPayment(); break;
+                case 'signin':
+                case 'register': initAuthPages(); break;
+                case 'blog': initBlog(); break;
+                case 'article': initArticle(queryParams.get('id')); break;
+            }
+            
+            // Scroll top unless it's cart (prevent jarring jumps if just updating qty)
+            if(viewId !== 'cart') window.scrollTo(0, 0);
+        };
+
+        // --- INIT APP ---
+        window.addEventListener('hashchange', router);
+        window.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            checkAuth();
+            initHome(); // Cache initial DOM
+            router(); // Route based on current URL
+        });
+
+    </script>
+</body>
+</html>
